@@ -4,8 +4,15 @@
 # образования Ростовской области», выполнив манипуляции в новом файле.
 
 import re
-p = re.compile(r'[8][(][0-9]{3}[)][0-9]{3}[-][0-9]{2}[-][0-9]{2}')
+
+
+p = re.compile(r'[8][(]\d{3}[)]\d{3}[-]\d{2}[-]\d{2}')
 with open("hotline1.txt", "rt", encoding="UTF-8") as f1:
     t = f1.read()
     r = re.findall(p, t)
 print(f"Количество полученных элементов: {len(r)}")
+
+text = t.replace("Горячая линия", "Министерства образования Ростовской области")
+
+with open("new_file", "w", encoding="UTF-8") as f2:
+    f2.write(text)
