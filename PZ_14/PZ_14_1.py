@@ -12,7 +12,7 @@ with open("hotline1.txt", "rt", encoding="UTF-8") as f1:
     r = re.findall(p, t)
 print(f"Количество полученных элементов: {len(r)}")
 
-text = t.replace("Горячая линия", "Министерства образования Ростовской области")
+text = t.replace("Горячая линия", "Горячая линия" + " " + "Министерства образования Ростовской области")
 
-with open("new_file", "w", encoding="UTF-8") as f2:
+with open("new_file.txt", "w", encoding="UTF-8") as f2:
     f2.write(text)
