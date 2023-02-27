@@ -1,4 +1,4 @@
-import PZ_16
+from figures import circle, square, triangle
 
 
 
