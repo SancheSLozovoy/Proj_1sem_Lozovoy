@@ -1,4 +1,4 @@
-from figures import circle, square, triangle
+import figures
 
 
 
