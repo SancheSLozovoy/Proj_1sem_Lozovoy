@@ -1,4 +1,1 @@
-import figures
-
-
-
+from figures import *
