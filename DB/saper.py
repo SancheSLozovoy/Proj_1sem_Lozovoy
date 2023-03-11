@@ -2,16 +2,16 @@ from numpy import printoptions
 import sqlite3 as sq
 from data_users import info_users
 
-with sq.connect('saper.db') as con:
-  con.execute("""CREATE TABLE IF NOT EXISTS users (
-        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        sex INTEGER NOT NULL DEFAULT 1,
-        old INTEGER,
-        score INTEGER
-    )""")
-con.executemany("INSERT INTO users VALUES (?,?,?,?,?)", info_users)
-con.commit()
+#with sq.connect('saper.db') as con:
+ # con.execute("""CREATE TABLE IF NOT EXISTS users (
+  #      user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+   #     name TEXT NOT NULL,
+    #    sex INTEGER NOT NULL DEFAULT 1,
+     #   old INTEGER,
+      #  score INTEGER
+    #)""")
+#con.executemany("INSERT INTO users VALUES (?,?,?,?,?)", info_users)
+#con.commit()
 
 with sq.connect("saper.db") as con:
     cur = con.cursor()
