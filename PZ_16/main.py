@@ -1,4 +1,1 @@
-from figures import circle, square, triangle
-
-
-
+from figures import *
