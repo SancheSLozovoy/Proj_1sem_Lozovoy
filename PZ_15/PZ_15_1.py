@@ -5,27 +5,28 @@ with sq.connect('zarplata.db') as con:
     con.execute("PRAGMA foreing_keys = ON")
     con.execute("""CREATE TABLE IF NOT EXISTS anketa (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    lastname TEXT NOT NULL,
-    birth_day DATE NOT NULL,
-    sex VARCHAR NOT NULL,
-    data_naima DATE NOT NULL,
-    otdel VARCHAR NOT NULL,
-    baza_stavka DECIMAL NOT NULL
+    name TEXT,
+    lastname TEXT,
+    birth_day DATE,
+    sex VARCHAR,
+    data_naima DATE,
+    dolznost VARCHAR,
+    otdel VARCHAR,
+    baza_stavka DECIMAL
     )""")
-con.executemany("INSERT INTO anketa VALUES (?, ?, ?, ?, ?, ?, ?, ?)", anketa)
+con.executemany("INSERT INTO anketa VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", anketa)
 con.commit()
 
 with sq.connect('zarplata.db') as con:
-    cur = con.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS bolnicnie_listi (
+    con.execute("""CREATE TABLE IF NOT EXISTS bolnicnie_listi (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_sotr INTEGER NOT NULL,
-    start_date DATE NOT NULL,
-    stop_date DATE NOT NULL,
-    prichina VARCHAR NOT NULL,
-    diagnoz VARCHAR NOT NULL,
-    oplachen BOOLEAN NOT NULL,
+    id_sotr INTEGER,
+    start_date DATE,
+    stop_date DATE,
+    prichina VARCHAR,
+    diagnoz VARCHAR,
+    oplachen BOOLEAN,
     FOREIGN KEY (id_sotr) REFERENCES anketa (id) ON DELETE CASCADE ON UPDATE CASCADE
     )""")
 con.executemany("INSERT INTO bolnicnie_listi VALUES (?, ?, ?, ?, ?, ?, ?)", bolnicnie_listi)
+con.commit()
