@@ -25,30 +25,6 @@
 # В данной структуре таблица "Больничные листы" связана с таблицей "Анкета" через
 # внешний ключ id_сотрудника. Это означает, что каждый больничный лист относится к
 # определенному сотруднику из таблицы "Анкета".
-# SQL-запросы на удаление данных из БД:
-# 1. Удалить все записи о больничных листах для сотрудника с именем "Иван"
-# 2. Удалить все записи о больничных листах для сотрудника с фамилией "Петров"
-# 3. Удалить все записи о больничных листах для сотрудника с должностью
-# "Менеджер"
-# 4. Удалить все записи о больничных листах для сотрудника с отделом "Отдел
-# продаж"
-# 5. Удалить все записи о больничных листах для сотрудника женского пола
-# 6. Удалить все записи о больничных листах для сотрудников старше 50 лет
-# 7. Удалить все записи о неоплаченных больничных листах
-# 8. Удалить все записи о больничных листах, дата окончания которых прошла
-# 9. Удалить все записи о больничных листах, начиная с определенной даты
-# 10. Удалить все записи о больничных листах, закончившихся до определенной даты
-# 11. Удалить все больничные листы сотрудника с именем "Иван" из таблицы
-# "Больничные листы"
-# 12. Удалить все больничные листы сотрудников, чьи фамилии начинаются на букву
-# "С" из таблицы "Больничные листы"
-# 13. Удалить все больничные листы, которые еще не были оплачены, у сотрудников с
-# должностью "Менеджер" из таблицы "Больничные листы"
-# 14. Удалить все больничные листы, выписанные сотрудникам отдела "IT" в период с 1
-# января
-# 15. Удалить все больничные листы, связанные со сотрудниками старше 50 лет из
-# таблицы "Больничные листы"
-
 
 import sqlite3 as sq
 from data import anketa, bolnicnie_listi
@@ -106,6 +82,7 @@ from data import anketa, bolnicnie_listi
 # они оформляли
 # 15. Вывести список сотрудников и суммарную продолжительность их больничных
 # листов в текущем году
+
 with sq.connect("zarplata.db") as con:
     cur = con.cursor()
     res1 = cur.execute("SELECT name, lastname, dolznost FROM anketa ").fetchall()
@@ -173,16 +150,51 @@ print(res15)
 # начала
 # 7. Обновить причину больничного листа в таблице "Больничные листы" на
 # определенное значение для всех сотрудников, работающих в отделе "Бухгалтерия".
+
 with sq.connect("zarplata.db") as con:
     cur = con.cursor()
-    up1 = cur.execute("UPDATE anketa SET baza_stavka = 30000 WHERE dolznost = 'Бухгалтер'")
-    up2 = cur.execute("UPDATE anketa SET otdel = 'Маркетинг' WHERE birth_day BETWEEN '1950-01-01' AND '1970-01-01'")
-    up3 = cur.execute("UPDATE anketa SET data_naima = '2019-12-24' WHERE id_a = 5")
-    up4 = cur.execute("UPDATE bolnicnie_listi SET prichina = 'Простуда' WHERE id_a = 9")
-    # up5 = cur.execute("UPDATE anketa a INNER JOIN bolnicnie_listi b ON a.id_a = b.id_a SET b.baza_stavka = a.baza_stavka * 1.2 WHERE b.oplachen = 1")
-    # up6 = cur.execute("UPDATE bolnicnie_listi INNER JOIN anketa ON bolnicnie_listi.id_a = anketa.id_a "
+    cur.execute("UPDATE anketa SET baza_stavka = 30000 WHERE dolznost = 'Бухгалтер'")
+    cur.execute("UPDATE anketa SET otdel = 'Маркетинг' WHERE birth_day BETWEEN '1950-01-01' AND '1970-01-01'")
+    cur.execute("UPDATE anketa SET data_naima = '2019-12-24' WHERE id_a = 5")
+    cur.execute("UPDATE bolnicnie_listi SET prichina = 'Простуда' WHERE id_a = 9")
+    cur.execute("UPDATE anketa a INNER JOIN bolnicnie_listi b ON a.id_a = b.id_a "
+                "SET b.baza_stavka = a.baza_stavka * 1.2 WHERE b.oplachen = 1")
+    # cur.execute("UPDATE bolnicnie_listi INNER JOIN anketa ON bolnicnie_listi.id_a = anketa.id_a "
     #             "SET bolnicnie_listi.start_date = '2020-01-01' WHERE bolnicnie_listi.start_date < '2020-01-01'")
-    up7 = cur.execute("UPDATE bolnicnie_listi SET prichina = 'Ушиб' WHERE id_a "
-                      "IN (SELECT id_a FROM anketa WHERE otdel = 'Бухгалтерия')")
+    # cur.execute("UPDATE bolnicnie_listi SET prichina = 'Ушиб' WHERE id_a "
+    #             "IN (SELECT id_a FROM anketa WHERE otdel = 'Бухгалтерия')")
     s = cur.execute("SELECT * FROM bolnicnie_listi").fetchall()
 print(s)
+
+# SQL-запросы на удаление данных из БД:
+# 1. Удалить все записи о больничных листах для сотрудника с именем "Иван"
+# 2. Удалить все записи о больничных листах для сотрудника с фамилией "Петров"
+# 3. Удалить все записи о больничных листах для сотрудника с должностью
+# "Менеджер"
+# 4. Удалить все записи о больничных листах для сотрудника с отделом "Отдел
+# продаж"
+# 5. Удалить все записи о больничных листах для сотрудника женского пола
+# 6. Удалить все записи о больничных листах для сотрудников старше 50 лет
+# 7. Удалить все записи о неоплаченных больничных листах
+# 8. Удалить все записи о больничных листах, дата окончания которых прошла
+# 9. Удалить все записи о больничных листах, начиная с определенной даты
+# 10. Удалить все записи о больничных листах, закончившихся до определенной даты
+# 11. Удалить все больничные листы сотрудника с именем "Иван" из таблицы
+# "Больничные листы"
+# 12. Удалить все больничные листы сотрудников, чьи фамилии начинаются на букву
+# "С" из таблицы "Больничные листы"
+# 13. Удалить все больничные листы, которые еще не были оплачены, у сотрудников с
+# должностью "Менеджер" из таблицы "Больничные листы"
+# 14. Удалить все больничные листы, выписанные сотрудникам отдела "IT" в период с 1
+# января
+# 15. Удалить все больничные листы, связанные со сотрудниками старше 50 лет из
+# таблицы "Больничные листы"
+
+# with sq.connect("zarplata.db") as con:
+#     cur = con.cursor()
+#     cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches "
+#                 "FROM bolnicnie_listi WHERE name IN(SELECT name FROM anketa WHERE name = 'Иван'").fetchall()
+#     cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches "
+#                 "FROM bolnicnie_listi WHERE name IN(SELECT lastname FROM anketa WHERE lastname = 'Петов'").fetchall()
+#     cur.execute("DELETE FROM start_date, stop_date, prichina, diagnoz, oplaches ")
+
