@@ -157,12 +157,12 @@ with sq.connect("zarplata.db") as con:
     cur.execute("UPDATE anketa SET otdel = 'Маркетинг' WHERE birth_day BETWEEN '1950-01-01' AND '1970-01-01'")
     cur.execute("UPDATE anketa SET data_naima = '2019-12-24' WHERE id_a = 5")
     cur.execute("UPDATE bolnicnie_listi SET prichina = 'Простуда' WHERE id_a = 9")
-    cur.execute("UPDATE anketa a INNER JOIN bolnicnie_listi b ON a.id_a = b.id_a "
-                "SET b.baza_stavka = a.baza_stavka * 1.2 WHERE b.oplachen = 1")
-    # cur.execute("UPDATE bolnicnie_listi INNER JOIN anketa ON bolnicnie_listi.id_a = anketa.id_a "
-    #             "SET bolnicnie_listi.start_date = '2020-01-01' WHERE bolnicnie_listi.start_date < '2020-01-01'")
-    # cur.execute("UPDATE bolnicnie_listi SET prichina = 'Ушиб' WHERE id_a "
-    #             "IN (SELECT id_a FROM anketa WHERE otdel = 'Бухгалтерия')")
+    cur.execute("UPDATE anketa SET baza_stavka = baza_stavka * 1.2 "
+                "WHERE id_a IN(SELECT id_a FROM bolnicnie_listi WHERE oplachen = 1)")
+    cur.execute("UPDATE bolnicnie_listi SET bolnicnie_listi.start_date = '2020-01-01' "
+                "WHERE bolnicnie_listi.start_date < '2020-01-01'")
+    cur.execute("UPDATE bolnicnie_listi SET prichina = 'Ушиб' WHERE id_a "
+                "IN (SELECT id_a FROM anketa WHERE otdel = 'Бухгалтерия')")
     s = cur.execute("SELECT * FROM bolnicnie_listi").fetchall()
 print(s)
 
@@ -190,11 +190,20 @@ print(s)
 # 15. Удалить все больничные листы, связанные со сотрудниками старше 50 лет из
 # таблицы "Больничные листы"
 
-# with sq.connect("zarplata.db") as con:
-#     cur = con.cursor()
-#     cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches "
-#                 "FROM bolnicnie_listi WHERE name IN(SELECT name FROM anketa WHERE name = 'Иван'").fetchall()
-#     cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches "
-#                 "FROM bolnicnie_listi WHERE name IN(SELECT lastname FROM anketa WHERE lastname = 'Петов'").fetchall()
-#     cur.execute("DELETE FROM start_date, stop_date, prichina, diagnoz, oplaches ")
+with sq.connect("zarplata.db") as con:
+    cur = con.cursor()
+    cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches "
+                "FROM bolnicnie_listi WHERE id_a IN(SELECT id_a FROM anketa WHERE name = 'Иван'").fetchall()
+    cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches "
+                "FROM bolnicnie_listi WHERE id_a IN(SELECT id_a FROM anketa WHERE lastname = 'Петов'").fetchall()
+    cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches FROM bolnicnie_listi "
+                "WHERE id_a(SELECT id_a FROM anketa WHERE dolznost = 'Менеджер'")
+    cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches FROM bolnicnie_listi "
+                "WHERE id_a(SELECT id_a FROM anketa WHERE otdel = 'Продажа'")
+    cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches FROM bolnicnie_listi "
+                "WHERE id_a(SELECT id_a FROM anketa WHERE sex = 'ж'")
+    cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches FROM bolnicnie_listi "
+                "WHERE id_a(SELECT id_a FROM anketa WHERE birth_day < 1973-01-01")
+    cur.execute("DELETE start_date, stop_date, prichina, diagnoz, oplaches FROM bolnicnie_listi "
+                "WHERE oplachen = 0")
 
