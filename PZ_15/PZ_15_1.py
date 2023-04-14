@@ -42,8 +42,8 @@ with sq.connect('zarplata.db') as con:
     otdel VARCHAR,
     baza_stavka DECIMAL
     )""")
-cur.executemany("INSERT INTO anketa VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", anketa)
-con.commit()
+# cur.executemany("INSERT INTO anketa VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", anketa)
+# con.commit()
 
 with sq.connect('zarplata.db') as con:
     cur = con.cursor()
@@ -58,8 +58,8 @@ with sq.connect('zarplata.db') as con:
     oplachen BOOLEAN,
     FOREIGN KEY (id_a) REFERENCES anketa(id_a) ON DELETE CASCADE ON UPDATE CASCADE
     )""")
-cur.executemany("INSERT INTO bolnicnie_listi VALUES (?, ?, ?, ?, ?, ?, ?)", bolnicnie_listi)
-con.commit()
+# cur.executemany("INSERT INTO bolnicnie_listi VALUES (?, ?, ?, ?, ?, ?, ?)", bolnicnie_listi)
+# con.commit()
 
 # SQL-запросы на выборку данных:
 # 1. Вывести список всех сотрудников и их должностей
@@ -103,7 +103,7 @@ with sq.connect("zarplata.db") as con:
                         "bolnicnie_listi.prichina, bolnicnie_listi.diagnoz, bolnicnie_listi.oplachen FROM anketa "
                         "INNER JOIN bolnicnie_listi ON anketa.id_a = bolnicnie_listi.id_a WHERE "
                         "bolnicnie_listi.start_date >= DATE('now', '-1 month')").fetchall()
-    res12 = cur.execute("SELECT otdel, AVG(julianday(stop_date) - julianday(start_date) + 1) FROM anketa "
+    res12 = cur.execute("SELECT otdel, AVG(julianday(stop_date) - julianday(start_date)) FROM anketa "
                         "INNER JOIN bolnicnie_listi ON anketa.id_a = bolnicnie_listi.id_a GROUP BY otdel").fetchall()
     res13 = cur.execute("SELECT anketa.name, anketa.lastname, bolnicnie_listi.start_date, bolnicnie_listi.stop_date, "
                         "bolnicnie_listi.prichina, bolnicnie_listi.diagnoz, bolnicnie_listi.oplachen FROM anketa "
@@ -126,7 +126,7 @@ print(res4)
 print(res5)
 print(res6)
 print(res7)
-print(res8)
+print("Средняя базовая ставка сотрудников:", *res8)
 print(res9)
 print(res10)
 print(res11)
@@ -152,20 +152,20 @@ print(cur.execute("SELECT * FROM bolnicnie_listi").fetchall())
 # начала
 # 7. Обновить причину больничного листа в таблице "Больничные листы" на
 # определенное значение для всех сотрудников, работающих в отделе "Бухгалтерия".
-
-with sq.connect("zarplata.db") as con:
-    cur = con.cursor()
-    cur.execute("UPDATE anketa SET baza_stavka = 30000 WHERE dolznost = 'Бухгалтер'")
-    cur.execute("UPDATE anketa SET otdel = 'Маркетинг' WHERE birth_day BETWEEN '1950-01-01' AND '1970-01-01'")
-    cur.execute("UPDATE anketa SET data_naima = '2019-12-24' WHERE id_a = 5")
-    cur.execute("UPDATE bolnicnie_listi SET prichina = 'Простуда' WHERE id_a = 9")
-    cur.execute("UPDATE anketa SET baza_stavka = baza_stavka * 1.2 "
-                "WHERE id_a IN(SELECT id_a FROM bolnicnie_listi WHERE oplachen = 1)")
-    cur.execute("UPDATE bolnicnie_listi SET start_date = '2023-04-02' "
-                "WHERE start_date < '2023-04-10'")
-    cur.execute("UPDATE bolnicnie_listi SET prichina = 'Обострение заболевания' WHERE id_a IN "
-                "(SELECT a.id_a FROM anketa a INNER JOIN bolnicnie_listi b ON a.id_a = b.id_a "
-                "WHERE otdel = 'Бухгалтерия')")
+#
+# with sq.connect("zarplata.db") as con:
+#     cur = con.cursor()
+#     cur.execute("UPDATE anketa SET baza_stavka = 30000 WHERE dolznost = 'Бухгалтер'")
+#     cur.execute("UPDATE anketa SET otdel = 'Маркетинг' WHERE birth_day BETWEEN '1950-01-01' AND '1970-01-01'")
+#     cur.execute("UPDATE anketa SET data_naima = '2019-12-24' WHERE id_a = 5")
+#     cur.execute("UPDATE bolnicnie_listi SET prichina = 'Простуда' WHERE id_a = 9")
+#     cur.execute("UPDATE anketa SET baza_stavka = baza_stavka * 1.2 "
+#                 "WHERE id_a IN(SELECT id_a FROM bolnicnie_listi WHERE oplachen = 1)")
+#     cur.execute("UPDATE bolnicnie_listi SET start_date = '2023-04-02' "
+#                 "WHERE start_date < '2023-04-10'")
+#     cur.execute("UPDATE bolnicnie_listi SET prichina = 'Обострение заболевания' WHERE id_a IN "
+#                 "(SELECT a.id_a FROM anketa a INNER JOIN bolnicnie_listi b ON a.id_a = b.id_a "
+#                 "WHERE otdel = 'Бухгалтерия')")
 
 # SQL-запросы на удаление данных из БД:
 # 1. Удалить все записи о больничных листах для сотрудника с именем "Иван"
