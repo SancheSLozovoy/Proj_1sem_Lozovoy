@@ -9,6 +9,7 @@ class Form:
 
 class Circle(Form):
     def __init__(self, color, type, radius):
+        super().__init__(color, type)
         self.radius = radius
 
     def area(self):
