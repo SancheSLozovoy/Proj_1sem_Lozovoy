@@ -72,12 +72,6 @@ def update():
     if held_keys['d'] and car.x < 7:
         car.x += 10 * time.dt  # Движение машины вправо при удерживании клавиши 'd'
 
-    for enemy in enemies:
-        if car.intersects(enemy).hit:
-            car.x += 10 * time.dt  # Отталкивание машины в противоположном направлении при столкновении
-            car.shake()  # Визуальный эффект тряски машины
-            score += 1  # Увеличение счета
-
     for road in pair:
         road.y -= 6 * time.dt  # Движение дороги вниз
         if road.y < -15:
