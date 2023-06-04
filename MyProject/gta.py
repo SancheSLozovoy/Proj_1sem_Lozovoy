@@ -92,7 +92,7 @@ def update():
 
     score_text.text = f"Score: {score}"  # Обновление текста счета
 
-    if score >= 10000:
+    if score >= 5000:
         game_over = True  # Установка флага окончания игры
         score_text.text = "GAME OVER"  # Обновление текста счета на "GAME OVER"
 
